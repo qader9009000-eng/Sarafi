@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>خدمات بانکی صرافی</title>
+
+  <!-- فونت فارسی وزیرمتن -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Vazirmatn', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              navy: '#0f172a',
+              emerald: '#059669',
+              gold: '#d97706',
+            }
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col selection:bg-emerald-600 selection:text-white">
+
+  <!-- نوار بالای صفحه (هدر) -->
+  <header class="bg-gradient-to-l from-slate-900 via-slate-800 to-emerald-950 text-white shadow-lg sticky top-0 z-30 border-b border-emerald-500/20">
+    <div class="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between gap-3">
+      <!-- لوگو و عنوان -->
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchToCustomerView()">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shadow-md shadow-emerald-950/50 border border-emerald-300/30 shrink-0">
+          <!-- آیکون صرافی / بانک -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+            <span id="headerSarafiName">خدمات بانکی صرافی</span>
+            <span class="hidden sm:inline-block text-[11px] font-medium bg-amber-500/20 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full">سامانه رسمی</span>
+          </h1>
+          <p id="headerSarafiTagline" class="text-xs text-slate-300">درگاه اطلاعات حساب، کارت‌های معتبر و نرخ لحظه‌ای ارز</p>
+        </div>
+      </div>
+
+      <!-- دکمه‌های تغییر نما -->
+      <div class="flex items-center gap-2">
+        <button id="btnCustomerView" onclick="switchToCustomerView()" class="hidden px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          نمای مشتری
+        </button>
+
+        <button id="btnAdminPanel" onclick="openAdminAccess()" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-100 border border-white/15 text-xs sm:text-sm font-medium transition flex items-center gap-1.5 backdrop-blur-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span>پنل مدیریت</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- محتوای اصلی -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6 sm:py-8">
+
+    <!-- ==================== بخش ۱: نمای مشتری ==================== -->
+    <section id="customerSection" class="space-y-6">
+
+      <!-- نوار/باکس متن تبلیغات و اطلاعیه -->
+      <div id="promoBannerBox" class="rounded-2xl bg-gradient-to-l from-amber-500 via-amber-600 to-orange-600 text-white px-4 py-3 sm:px-5 sm:py-3.5 shadow-md flex items-center justify-between gap-3 border border-amber-300/40">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+            </svg>
+          </div>
+          <p id="promoBannerText" class="text-xs sm:text-sm font-bold leading-relaxed">
+            حواله‌جات فوری به ایران و افغانستان با بهترین نرخ روز و تسویه آنی!
+          </p>
+        </div>
+        <span class="hidden sm:inline-block shrink-0 text-[11px] font-extrabold bg-black/20 px-2.5 py-1 rounded-lg">اطلاعیه ویژه</span>
+      </div>
+
+      <!-- کارت پیام خوش‌آمدگویی -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-800 via-emerald-900 to-slate-900 text-white p-6 sm:p-8 shadow-xl border border-emerald-500/20">
+        <!-- تزئین پس‌زمینه -->
+        <div class="absolute -left-10 -top-10 w-44 h-44 rounded-full bg-emerald-500/10 blur-2xl pointer-events-none"></div>
+        <div class="absolute -right-10 -bottom-10 w-48 h-48 rounded-full bg-amber-500/10 blur-2xl pointer-events-none"></div>
+
+        <div class="relative flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-2.5">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-xs font-medium">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              تایید هویت حساب‌های رسمی صرافی
+            </div>
+            <h2 id="welcomeTitleDisplay" class="text-xl sm:text-2xl font-extrabold leading-relaxed text-white">
+              کاربر عزیز به صرافی خوش آمدی
+            </h2>
+            <p id="welcomeSubtitleDisplay" class="text-sm sm:text-base text-emerald-100/95 font-medium leading-relaxed">
+              برای انجام واریز لطفا شماره کارت ملزوم رو انتخاب کن
+            </p>
+          </div>
+
+          <div class="hidden md:flex flex-col items-end text-left shrink-0 bg-white/5 border border-white/10 rounded-2xl p-3.5 backdrop-blur-sm">
+            <span class="text-xs text-slate-300">تعداد بانک‌های فعال</span>
+            <span id="activeBanksCountBadge" class="text-2xl font-extrabold text-amber-400 mt-0.5">۷ بانک</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- تابلوی نرخ لحظه‌ای ارزها -->
+      <div id="currencyRatesSection" class="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-5 sm:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-extrabold text-slate-800">تابلوی نرخ لحظه‌ای ارزها</h3>
+              <p class="text-[11px] text-slate-500">آخرین بروزرسانی: <span id="ratesLastUpdatedText" class="font-semibold text-slate-700">هم‌اکنون</span></p>
+            </div>
+          </div>
+
+          <button onclick="copyRatesBoard()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300 text-xs font-bold transition flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
+            کپی تابلو برای تلگرام / واتساپ
+          </button>
+        </div>
+
+        <div id="customerRatesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <!-- کارت‌های نرخ ارز اینجا رندر می‌شوند -->
+        </div>
+        <div id="noRatesCustomerMsg" class="hidden text-center py-6 text-xs text-slate-400">
+          هنوز نرخی در تابلو ثبت نشده است.
+        </div>
+      </div>
+
+      <!-- مرحله ۱: انتخاب بانک -->
+      <div class="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-5 sm:p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-xl bg-emerald-100 text-emerald-800 font-bold text-sm flex items-center justify-center">۱</span>
+            <h3 class="text-base sm:text-lg font-bold text-slate-800">بانک مورد نظر خود را انتخاب کنید:</h3>
+          </div>
+          <span class="text-xs text-slate-400">روی نام بانک ضربه بزنید</span>
+        </div>
+
+        <!-- شبکه کارت‌های بانک‌ها -->
+        <div id="banksGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+          <!-- بانک‌ها به صورت پویا اینجا رندر می‌شوند -->
+        </div>
+
+        <!-- پیام در صورت نبودن بانک -->
+        <div id="noBanksMessage" class="hidden text-center py-10 text-slate-500">
+          <p class="text-base font-medium">در حال حاضر بانکی ثبت نشده است.</p>
+          <p class="text-xs mt-1">از طریق پنل مدیریت می‌توانید بانک‌های مورد نظر خود را اضافه کنید.</p>
+        </div>
+      </div>
+
+      <!-- مرحله ۲ و ۳: نمایش گزینه‌های کارت، شبا و شماره حساب پس از انتخاب بانک -->
+      <div id="paymentDetailsCard" class="hidden transition-all duration-300">
+        <div class="bg-white rounded-3xl shadow-lg border-2 border-emerald-500/30 overflow-hidden">
+          <!-- سربرگ بانک انتخاب‌شده -->
+          <div id="selectedBankHeader" class="bg-slate-900 text-white px-5 py-4 sm:px-6 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div id="selectedBankAvatar" class="w-11 h-11 rounded-2xl bg-emerald-600 flex items-center justify-center font-extrabold text-lg text-white shadow">
+                ب
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-slate-400">بانک انتخابی:</span>
+                  <h4 id="selectedBankName" class="text-lg font-extrabold text-white">بانک کشاورزی</h4>
+                </div>
+                <p class="text-xs sm:text-sm text-amber-300 font-medium mt-0.5">
+                  به نام: <span id="selectedAccountHolder" class="text-white font-semibold">صرافی معتبر</span>
+                </p>
+              </div>
+            </div>
+
+            <button onclick="resetSelection()" class="text-xs bg-white/10 hover:bg-white/20 text-slate-200 px-3 py-1.5 rounded-xl transition">
+              تغییر بانک
+            </button>
+          </div>
+
+          <div class="p-5 sm:p-6 space-y-6">
+            <!-- مرحله ۲: انتخاب نوع شماره (کارت / شبا / شماره حساب) -->
+            <div>
+              <div class="flex items-center gap-2.5 mb-3.5">
+                <span class="w-7 h-7 rounded-xl bg-amber-100 text-amber-800 font-bold text-sm flex items-center justify-center">۲</span>
+                <p class="text-sm sm:text-base font-bold text-slate-800">نوع اطلاعات واریز را انتخاب کنید:</p>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <!-- گزینه شماره کارت -->
+                <button id="optBtn-card" onclick="selectDetailType('card')" class="detail-type-btn group p-4 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 bg-slate-50/70 hover:bg-emerald-50/50 transition text-right flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center transition">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="font-bold text-slate-800 text-sm sm:text-base">شماره کارت</div>
+                      <div class="text-xs text-slate-500">کارت به کارت ۱۶ رقمی</div>
+                    </div>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                <!-- گزینه شماره شبا -->
+                <button id="optBtn-sheba" onclick="selectDetailType('sheba')" class="detail-type-btn group p-4 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 bg-slate-50/70 hover:bg-emerald-50/50 transition text-right flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 group-hover:bg-amber-600 group-hover:text-white flex items-center justify-center transition">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="font-bold text-slate-800 text-sm sm:text-base">شماره شبا</div>
+                      <div class="text-xs text-slate-500">پایا / ساتنا (IR)</div>
+                    </div>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                <!-- گزینه شماره حساب -->
+                <button id="optBtn-account" onclick="selectDetailType('account')" class="detail-type-btn group p-4 rounded-2xl border-2 border-slate-200 hover:border-emerald-500 bg-slate-50/70 hover:bg-emerald-50/50 transition text-right flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-700 group-hover:bg-sky-600 group-hover:text-white flex items-center justify-center transition">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="font-bold text-slate-800 text-sm sm:text-base">شماره حساب</div>
+                      <div class="text-xs text-slate-500">واریز مستقیم درون‌بانکی</div>
+                    </div>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- مرحله ۳: باکس نمایش شماره انتخاب‌شده + دکمه کپی کردن -->
+            <div id="finalNumberRevealBox" class="hidden rounded-2xl bg-gradient-to-br from-slate-50 to-emerald-50/70 border-2 border-emerald-500 p-5 sm:p-6 shadow-inner">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                <div class="flex items-center gap-2">
+                  <span id="revealedLabelBadge" class="px-3 py-1 rounded-full bg-emerald-600 text-white text-xs font-bold">شماره کارت</span>
+                  <span id="revealedBankSubLabel" class="text-xs text-slate-600 font-medium">بانک کشاورزی</span>
+                </div>
+                <div class="text-xs text-slate-600">
+                  صاحب حساب: <strong id="revealedHolderName" class="text-slate-900">صرافی معتبر</strong>
+                </div>
+              </div>
+
+              <!-- کادر نمایش عدد (چپ به راست برای خوانایی کامل ارقام) -->
+              <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+                <div dir="ltr" id="revealedNumberText" class="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-wider text-slate-900 font-mono select-all text-center sm:text-left break-all">
+                  6037 7010 0000 0000
+                </div>
+
+                <button id="copyActionBtn" onclick="copySelectedNumber()" class="w-full sm:w-auto shrink-0 px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold text-sm sm:text-base shadow-md shadow-emerald-600/20 transition flex items-center justify-center gap-2">
+                  <svg id="copyIconDefault" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  <svg id="copyIconSuccess" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span id="copyBtnLabel">کپی کردن شماره</span>
+                </button>
+              </div>
+
+              <p class="text-xs text-slate-500 mt-3 flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                با زدن دکمه «کپی کردن»، شماره بدون فاصله در حافظه گوشی شما ذخیره می‌شود تا مستقیماً در همراه بانک Paste کنید.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== بخش ۲: پنل مدیریت صرافی ==================== -->
+    <section id="adminSection" class="hidden space-y-6">
+
+      <!-- نوار بالای پنل مدیریت -->
+      <div class="bg-slate-900 text-white rounded-3xl p-5 sm:p-6 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 text-xs font-bold">مدیریت جامع</span>
+            <h2 class="text-lg sm:text-xl font-extrabold">پنل مدیریت صرافی</h2>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1">مدیریت متون بالای صفحه، نرخ ارزها، شماره حساب بانک‌ها و پشتیبان‌گیری اطلاعات</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="logoutAdmin()" class="px-4 py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 border border-rose-500/30 text-xs font-bold transition">
+            قفل پنل مدیریت
+          </button>
+        </div>
+      </div>
+
+      <!-- نوار تب‌های چهارگانه پنل مدیریت -->
+      <div class="bg-white p-2 rounded-2xl shadow-sm border border-slate-200 grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <button id="adminTabBtn-texts" onclick="switchAdminTab('texts')" class="admin-tab-btn px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 bg-emerald-600 text-white shadow-sm">
+          <span>۱. متون و تبلیغات</span>
+        </button>
+        <button id="adminTabBtn-rates" onclick="switchAdminTab('rates')" class="admin-tab-btn px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
+          <span>۲. نرخ ارزها</span>
+        </button>
+        <button id="adminTabBtn-banks" onclick="switchAdminTab('banks')" class="admin-tab-btn px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
+          <span>۳. بانک‌ها و کارت‌ها</span>
+        </button>
+        <button id="adminTabBtn-backup" onclick="switchAdminTab('backup')" class="admin-tab-btn px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-1.5 text-slate-600 hover:bg-slate-100">
+          <span>۴. پشتیبان‌گیری</span>
+        </button>
+      </div>
+
+      <!-- ========== تب ۱: تنظیمات ظاهری، نام صرافی و تبلیغات ========== -->
+      <div id="adminTabContent-texts" class="admin-tab-panel space-y-6">
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 sm:p-6 space-y-5">
+          <h3 class="text-base sm:text-lg font-extrabold text-slate-800 flex items-center gap-2">
+            <span class="w-2.5 h-6 rounded-full bg-emerald-600 inline-block"></span>
+            ویرایش نام صرافی، بنر تبلیغات و پیام خوش‌آمدگویی
+          </h3>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">نام صرافی (نمایش در بالای صفحه)</label>
+              <input type="text" id="settingSarafiName" placeholder="مثلاً: صرافی آنلاین هرات / خدمات بانکی صرافی" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none text-sm" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">زیرعنوان صرافی (توضیح کوتاه زیر نام)</label>
+              <input type="text" id="settingSarafiTagline" placeholder="مثلاً: درگاه اطلاعات حساب، کارت‌های معتبر و نرخ لحظه‌ای ارز" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none text-sm" />
+            </div>
+          </div>
+
+          <!-- بخش بنر تبلیغات -->
+          <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-3">
+            <div class="flex items-center justify-between">
+              <label class="text-xs sm:text-sm font-extrabold text-amber-900">متن نوار تبلیغات و اطلاعیه ویژه بالای صفحه</label>
+              <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="settingPromoEnabled" class="w-4 h-4 accent-emerald-600 rounded" />
+                <span class="text-xs font-bold text-slate-700">نمایش بنر تبلیغات در صفحه مشتری</span>
+              </label>
+            </div>
+            <textarea id="settingPromoText" rows="2" placeholder="متن تبلیغاتی یا اطلاعیه مهم صرافی را اینجا بنویسید..." class="w-full px-3.5 py-2.5 rounded-xl border border-amber-300 bg-white focus:border-emerald-600 outline-none text-sm"></textarea>
+          </div>
+
+          <!-- بخش متن خوش آمد گویی -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">تیتر پیام خوش‌آمدگویی</label>
+              <input type="text" id="settingWelcomeTitle" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">متن راهنمای واریز</label>
+              <input type="text" id="settingWelcomeSubtitle" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none text-sm" />
+            </div>
+          </div>
+
+          <div class="flex justify-end pt-2">
+            <button onclick="saveAllTextSettings()" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-md shadow-emerald-600/20 transition">
+              ذخیره تمام تنظیمات متون و تبلیغات
+            </button>
+          </div>
+        </div>
+
+        <!-- تغییر رمز عبور پنل مدیریت -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 sm:p-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div class="space-y-2 flex-1">
+            <h3 class="text-base font-extrabold text-slate-800">تغییر رمز ورود به پنل مدیریت</h3>
+            <p class="text-xs text-slate-500">این رمز برای محافظت از بخش مدیریت استفاده می‌شود.</p>
+            <input type="text" id="settingAdminPin" dir="ltr" placeholder="مثلاً: 1234" class="w-full sm:max-w-xs px-3.5 py-2 rounded-xl border border-slate-300 text-sm font-mono text-left" />
+          </div>
+          <button onclick="saveAdminPin()" class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition shrink-0">
+            بروزرسانی رمز پنل
+          </button>
+        </div>
+      </div>
+
+      <!-- ========== تب ۲: مدیریت نرخ ارزها ========== -->
+      <div id="adminTabContent-rates" class="admin-tab-panel hidden space-y-6">
+        <!-- فرم افزودن / ویرایش نرخ ارز -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 sm:p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 id="rateFormTitle" class="text-base sm:text-lg font-extrabold text-slate-800 flex items-center gap-2">
+              <span class="w-2.5 h-6 rounded-full bg-amber-500 inline-block"></span>
+              افزودن یا ویرایش نرخ ارز
+            </h3>
+            <button id="cancelRateEditBtn" onclick="cancelEditRate()" class="hidden text-xs px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold">
+              انصراف از ویرایش
+            </button>
+          </div>
+
+          <form id="rateForm" onsubmit="handleSaveRate(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <input type="hidden" id="editRateId" value="" />
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">نام ارز / جفت ارز *</label>
+              <input type="text" id="inputRateName" required placeholder="مثلاً: هزار تومان به افغانی" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none text-sm" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">نرخ خرید صرافی *</label>
+              <input type="text" id="inputRateBuy" required placeholder="مثلاً: 1.12 افغانی" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none text-sm" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">نرخ فروش صرافی *</label>
+              <input type="text" id="inputRateSell" required placeholder="مثلاً: 1.15 افغانی" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none text-sm" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">نماد / پرچم اختیاری</label>
+              <input type="text" id="inputRateIcon" placeholder="مثلاً: 🇦🇫 یا 🇺🇸 یا 🇪🇺" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none text-sm" />
+            </div>
+
+            <div class="sm:col-span-2 lg:col-span-4 flex justify-end pt-1">
+              <button type="submit" id="saveRateSubmitBtn" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-600/20 transition">
+                ثبت نرخ در تابلو
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- لیست نرخ‌های ثبت‌شده -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 sm:p-6">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <h3 class="text-base font-extrabold text-slate-800">
+              ارزهای موجود در تابلو (<span id="adminRatesCount">0</span> مورد)
+            </h3>
+            <button onclick="resetToDefaultRates()" class="text-xs text-slate-500 hover:text-rose-600 underline">
+              بازنشانی ارزها به حالت پیش‌فرض
+            </button>
+          </div>
+          <div id="adminRatesList" class="space-y-3">
+            <!-- لیست نرخ‌ها در پنل مدیریت -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== تب ۳: مدیریت بانک‌ها و حساب‌ها ========== -->
+      <div id="adminTabContent-banks" class="admin-tab-panel hidden space-y-6">
+        <!-- فرم افزودن یا ویرایش بانک -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 sm:p-6">
+          <div class="flex items-center justify-between mb-5">
+            <h3 id="formTitle" class="text-base sm:text-lg font-extrabold text-slate-800 flex items-center gap-2">
+              <span class="w-2.5 h-6 rounded-full bg-emerald-600 inline-block"></span>
+              افزودن بانک جدید به لیست صرافی
+            </h3>
+            <button id="cancelEditBtn" onclick="cancelEditBank()" class="hidden text-xs px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold">
+              انصراف از ویرایش
+            </button>
+          </div>
+
+          <form id="bankForm" onsubmit="handleSaveBank(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <input type="hidden" id="editBankId" value="" />
+
+            <!-- نام بانک -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">نام بانک *</label>
+              <input type="text" id="inputBankName" required placeholder="مثلاً: پاسارگاد، سامان، پارسیان..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 outline-none text-sm" />
+            </div>
+
+            <!-- نام صاحب حساب -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">نام صاحب حساب / کارت *</label>
+              <input type="text" id="inputHolderName" required placeholder="مثلاً: صرافی ارزیاب / علی محمدی" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 outline-none text-sm" />
+            </div>
+
+            <!-- رنگ نشان بانک -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">رنگ نشان بانک</label>
+              <select id="inputBankColor" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 outline-none text-sm bg-white">
+                <option value="emerald">سبز زمردی (کشاورزی / صادرات)</option>
+                <option value="blue">آبی بانکی (ملی / تجارت / سپه)</option>
+                <option value="amber">طلایی / نارنجی (ملت / پاسارگاد)</option>
+                <option value="purple">بنفش / سرمه‌ای (رفاه / سامان)</option>
+                <option value="rose">قرمز / زرشکی (ملت / پارسیان)</option>
+                <option value="teal">فیروزه‌ای (مسکن / شهر)</option>
+              </select>
+            </div>
+
+            <!-- شماره کارت -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">شماره کارت (۱۶ رقم) *</label>
+              <input type="text" id="inputCardNumber" dir="ltr" required placeholder="6037 7010 1234 5678" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 outline-none text-sm font-mono text-left" />
+            </div>
+
+            <!-- شماره شبا -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">شماره شبا (با IR یا بدون IR) *</label>
+              <input type="text" id="inputShebaNumber" dir="ltr" required placeholder="IR06 0160 0000 0000 1234 5678 90" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 outline-none text-sm font-mono text-left" />
+            </div>
+
+            <!-- شماره حساب -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">شماره حساب *</label>
+              <input type="text" id="inputAccountNumber" dir="ltr" required placeholder="0102345678901" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/20 outline-none text-sm font-mono text-left" />
+            </div>
+
+            <!-- دکمه ثبت -->
+            <div class="sm:col-span-2 lg:col-span-3 flex items-center justify-end gap-3 pt-2">
+              <button type="submit" id="saveBankSubmitBtn" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-600/20 transition flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>ذخیره و افزودن بانک</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- لیست بانک‌های ثبت‌شده در پنل مدیریت -->
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 sm:p-6">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-800">
+              لیست بانک‌های ثبت‌شده (<span id="adminBankCount">0</span> بانک)
+            </h3>
+            <button onclick="resetToDefaultBanks()" class="text-xs text-slate-500 hover:text-rose-600 underline">
+              بازنشانی به لیست پیش‌فرض اولیه
+            </button>
+          </div>
+
+          <div id="adminBanksList" class="space-y-3">
+            <!-- ردیف‌های مدیریت بانک‌ها اینجا ساخته می‌شوند -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== تب ۴: پشتیبان‌گیری و بازیابی ========== -->
+      <div id="adminTabContent-backup" class="admin-tab-panel hidden">
+        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 sm:p-8 space-y-6">
+          <div>
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-800">پشتیبان‌گیری و انتقال اطلاعات صرافی</h3>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
+              با دریافت فایل پشتیبان (JSON)، تمام بانک‌ها، شماره کارت‌ها، نرخ ارزها و متن تبلیغات شما در یک فایل ذخیره می‌شود و می‌توانید آن را روی گوشی یا مرورگر دیگری بازیابی کنید.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="p-5 rounded-2xl border border-emerald-200 bg-emerald-50/50 space-y-3">
+              <div class="font-extrabold text-emerald-900 text-sm">۱. دریافت فایل پشتیبان</div>
+              <p class="text-xs text-slate-600">ذخیره نسخه کامل اطلاعات فعلی در حافظه دستگاه شما.</p>
+              <button onclick="exportBackupJSON()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                دانلود فایل پشتیبان (JSON)
+              </button>
+            </div>
+
+            <div class="p-5 rounded-2xl border border-amber-200 bg-amber-50/50 space-y-3">
+              <div class="font-extrabold text-amber-900 text-sm">۲. بازیابی از فایل پشتیبان</div>
+              <p class="text-xs text-slate-600">بارگذاری فایل JSON قبلی برای جایگزینی سریع اطلاعات.</p>
+              <label class="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+                انتخاب و بارگذاری فایل پشتیبان
+                <input type="file" id="importJsonInput" accept=".json" class="hidden" onchange="importBackupJSON(event)" />
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- فوتر -->
+  <footer class="bg-white border-t border-slate-200 py-4 mt-8">
+    <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+      <span>© تمامی حقوق متعلق به سامانه <strong>خدمات بانکی صرافی</strong> می‌باشد.</span>
+      <span>لطفاً پیش از تایید نهایی واریز، نام صاحب حساب را در همراه بانک کنترل فرمایید.</span>
+    </div>
+  </footer>
+
+  <!-- مودال ورود رمز پنل مدیریت -->
+  <div id="adminPinModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-extrabold text-slate-800">ورود به پنل مدیریت</h3>
+        <button onclick="closePinModal()" class="text-slate-400 hover:text-slate-600 p-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        برای افزودن یا ویرایش شماره کارت‌ها، رمز عبور مدیریت را وارد نمایید.
+        <span class="inline-block mt-1 px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 font-semibold">رمز پیش‌فرض: 1234</span>
+      </p>
+      <form onsubmit="verifyAdminPin(event)" class="space-y-3">
+        <input type="password" id="pinInputField" dir="ltr" placeholder="••••" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-emerald-600 outline-none text-center text-lg font-mono tracking-widest" />
+        <p id="pinErrorMsg" class="hidden text-xs text-rose-600 font-semibold text-center">رمز عبور وارد شده اشتباه است!</p>
+        <button type="submit" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition">
+          ورود به پنل
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- اعلان شناور (Toast) -->
+  <div id="toastNotification" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-4 transition-all duration-300">
+    <div id="toastInner" class="px-5 py-3 rounded-2xl bg-slate-900 text-white text-sm font-bold shadow-xl flex items-center gap-2.5 border border-white/10">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+      <span id="toastText">عملیات انجام شد</span>
+    </div>
+  </div>
+
+  <script>
+    // کلیدهای ذخیره‌سازی در مرورگر (LocalStorage)
+    const STORAGE_KEYS = {
+      BANKS: 'sarafi_banking_services_banks_v1',
+      SETTINGS: 'sarafi_banking_services_settings_v2',
+      RATES: 'sarafi_banking_services_rates_v1'
+    };
+
+    // لیست پیش‌فرض ۷ بانک درخواستی
+    const DEFAULT_BANKS = [
+      {
+        id: 'bank-keshavarzi',
+        name: 'کشاورزی',
+        holder: 'مدیریت صرافی',
+        card: '6037701011223344',
+        sheba: 'IR120160000000001122334455',
+        account: '1122334455',
+        color: 'emerald',
+        active: true
+      },
+      {
+        id: 'bank-saderat',
+        name: 'صادرات',
+        holder: 'مدیریت صرافی',
+        card: '6037691022334455',
+        sheba: 'IR340190000000102233445566',
+        account: '0102233445566',
+        color: 'blue',
+        active: true
+      },
+      {
+        id: 'bank-tejarat',
+        name: 'تجارت',
+        holder: 'مدیریت صرافی',
+        card: '5859831033445566',
+        sheba: 'IR560180000000203344556677',
+        account: '2033445566',
+        color: 'blue',
+        active: true
+      },
+      {
+        id: 'bank-melli',
+        name: 'ملی',
+        holder: 'مدیریت صرافی',
+        card: '6037991044556677',
+        sheba: 'IR780170000000304455667788',
+        account: '0304455667788',
+        color: 'amber',
+        active: true
+      },
+      {
+        id: 'bank-mellat',
+        name: 'ملت',
+        holder: 'مدیریت صرافی',
+        card: '6104337055667788',
+        sheba: 'IR900120000000405566778899',
+        account: '4055667788',
+        color: 'rose',
+        active: true
+      },
+      {
+        id: 'bank-refah',
+        name: 'رفاه کارگران',
+        holder: 'مدیریت صرافی',
+        card: '5894631066778899',
+        sheba: 'IR110130000000506677889900',
+        account: '5066778899',
+        color: 'purple',
+        active: true
+      },
+      {
+        id: 'bank-sepah',
+        name: 'سپه',
+        holder: 'مدیریت صرافی',
+        card: '5892101077889900',
+        sheba: 'IR220150000000607788990011',
+        account: '6077889900',
+        color: 'teal',
+        active: true
+      }
+    ];
+
+    const DEFAULT_SETTINGS = {
+      sarafiName: 'خدمات بانکی صرافی',
+      sarafiTagline: 'درگاه اطلاعات حساب، کارت‌های معتبر و نرخ لحظه‌ای ارز',
+      promoEnabled: true,
+      promoText: 'حواله‌جات فوری به ایران و افغانستان با بهترین نرخ روز و تسویه آنی!',
+      welcomeTitle: 'کاربر عزیز به صرافی خوش آمدی',
+      welcomeSubtitle: 'برای انجام واریز لطفا شماره کارت ملزوم رو انتخاب کن',
+      adminPin: '1234',
+      ratesUpdatedAt: 'امروز - بروزرسانی لحظه‌ای'
+    };
+
+    const DEFAULT_RATES = [
+      {
+        id: 'rate-afn-irt',
+        name: 'هزار تومان به افغانی',
+        buy: '۱.۱۴ افغانی',
+        sell: '۱.۱۷ افغانی',
+        icon: '🇦🇫'
+      },
+      {
+        id: 'rate-usd-afn',
+        name: 'دلار آمریکا به افغانی',
+        buy: '۶۸.۵۰ افغانی',
+        sell: '۶۹.۰۰ افغانی',
+        icon: '🇺🇸'
+      },
+      {
+        id: 'rate-eur-afn',
+        name: 'یورو اروپا به افغانی',
+        buy: '۷۳.۲۰ افغانی',
+        sell: '۷۴.۰۰ افغانی',
+        icon: '🇪🇺'
+      }
+    ];
+
+    // وضعیت برنامه
+    let banks = [];
+    let rates = [];
+    let settings = { ...DEFAULT_SETTINGS };
+    let selectedBankId = null;
+    let selectedDetailType = null; // 'card' | 'sheba' | 'account'
+    let isAdminAuthenticated = false;
+
+    // نگاشت رنگ‌ها برای ظاهر زیبا
+    const COLOR_STYLES = {
+      emerald: {
+        bg: 'bg-emerald-600',
+        lightBg: 'bg-emerald-50',
+        text: 'text-emerald-700',
+        border: 'border-emerald-200',
+        ring: 'ring-emerald-500'
+      },
+      blue: {
+        bg: 'bg-blue-600',
+        lightBg: 'bg-blue-50',
+        text: 'text-blue-700',
+        border: 'border-blue-200',
+        ring: 'ring-blue-500'
+      },
+      amber: {
+        bg: 'bg-amber-600',
+        lightBg: 'bg-amber-50',
+        text: 'text-amber-700',
+        border: 'border-amber-200',
+        ring: 'ring-amber-500'
+      },
+      purple: {
+        bg: 'bg-indigo-600',
+        lightBg: 'bg-indigo-50',
+        text: 'text-indigo-700',
+        border: 'border-indigo-200',
+        ring: 'ring-indigo-500'
+      },
+      rose: {
+        bg: 'bg-rose-600',
+        lightBg: 'bg-rose-50',
+        text: 'text-rose-700',
+        border: 'border-rose-200',
+        ring: 'ring-rose-500'
+      },
+      teal: {
+        bg: 'bg-teal-600',
+        lightBg: 'bg-teal-50',
+        text: 'text-teal-700',
+        border: 'border-teal-200',
+        ring: 'ring-teal-500'
+      }
+    };
+
+    // بارگذاری اولیه اطلاعات
+    function initApp() {
+      try {
+        const savedBanks = localStorage.getItem(STORAGE_KEYS.BANKS);
+        if (savedBanks) {
+          banks = JSON.parse(savedBanks);
+        } else {
+          banks = JSON.parse(JSON.stringify(DEFAULT_BANKS));
+          saveBanksToStorage();
+        }
+
+        const savedSettings = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+        if (savedSettings) {
+          settings = { ...DEFAULT_SETTINGS, ...JSON.parse(savedSettings) };
+        } else {
+          saveSettingsToStorage();
+        }
+
+        const savedRates = localStorage.getItem(STORAGE_KEYS.RATES);
+        if (savedRates) {
+          rates = JSON.parse(savedRates);
+        } else {
+          rates = JSON.parse(JSON.stringify(DEFAULT_RATES));
+          saveRatesToStorage();
+        }
+      } catch (e) {
+        banks = JSON.parse(JSON.stringify(DEFAULT_BANKS));
+        rates = JSON.parse(JSON.stringify(DEFAULT_RATES));
+        settings = { ...DEFAULT_SETTINGS };
+      }
+
+      applyWelcomeText();
+      renderCustomerRates();
+      renderCustomerBanksGrid();
+      renderAdminRatesList();
+      renderAdminBanksList();
+    }
+
+    function saveBanksToStorage() {
+      localStorage.setItem(STORAGE_KEYS.BANKS, JSON.stringify(banks));
+    }
+
+    function saveRatesToStorage() {
+      localStorage.setItem(STORAGE_KEYS.RATES, JSON.stringify(rates));
+    }
+
+    function saveSettingsToStorage() {
+      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+    }
+    // اعمال متن خوش‌آمدگویی، نام صرافی و تبلیغات
+    function applyWelcomeText() {
+      document.title = settings.sarafiName || 'خدمات بانکی صرافی';
+      document.getElementById('headerSarafiName').textContent = settings.sarafiName || 'خدمات بانکی صرافی';
+      document.getElementById('headerSarafiTagline').textContent = settings.sarafiTagline || '';
+
+      const promoBox = document.getElementById('promoBannerBox');
+      if (settings.promoEnabled && settings.promoText && settings.promoText.trim() !== '') {
+        promoBox.classList.remove('hidden');
+        document.getElementById('promoBannerText').textContent = settings.promoText;
+      } else {
+        promoBox.classList.add('hidden');
+      }
+
+      document.getElementById('welcomeTitleDisplay').textContent = settings.welcomeTitle;
+      document.getElementById('welcomeSubtitleDisplay').textContent = settings.welcomeSubtitle;
+      document.getElementById('ratesLastUpdatedText').textContent = settings.ratesUpdatedAt || 'هم‌اکنون';
+
+      // پر کردن فرم‌های پنل مدیریت
+      document.getElementById('settingSarafiName').value = settings.sarafiName || '';
+      document.getElementById('settingSarafiTagline').value = settings.sarafiTagline || '';
+      document.getElementById('settingPromoEnabled').checked = settings.promoEnabled !== false;
+      document.getElementById('settingPromoText').value = settings.promoText || '';
+      document.getElementById('settingWelcomeTitle').value = settings.welcomeTitle;
+      document.getElementById('settingWelcomeSubtitle').value = settings.welcomeSubtitle;
+      document.getElementById('settingAdminPin').value = settings.adminPin;
+    }
+
+    // رندر تابلوی نرخ ارزها در صفحه مشتری
+    function renderCustomerRates() {
+      const grid = document.getElementById('customerRatesGrid');
+      const noRatesMsg = document.getElementById('noRatesCustomerMsg');
+
+      if (!rates || rates.length === 0) {
+        grid.innerHTML = '';
+        noRatesMsg.classList.remove('hidden');
+        return;
+      }
+
+      noRatesMsg.classList.add('hidden');
+      grid.innerHTML = rates.map(item => `
+        <div class="rounded-2xl border border-slate-200 bg-slate-50/70 hover:bg-white p-4 transition shadow-2xs flex flex-col justify-between gap-3">
+          <div class="flex items-center justify-between gap-2">
+            <span class="font-extrabold text-slate-800 text-sm">${escapeHtml(item.name)}</span>
+            <span class="text-lg">${escapeHtml(item.icon || '💱')}</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/70 text-xs">
+            <div class="bg-emerald-50 border border-emerald-200/70 rounded-xl p-2 text-center">
+              <div class="text-[11px] text-emerald-700 font-medium">نرخ خرید</div>
+              <div class="font-extrabold text-emerald-950 text-sm mt-0.5">${escapeHtml(item.buy)}</div>
+            </div>
+            <div class="bg-amber-50 border border-amber-200/70 rounded-xl p-2 text-center">
+              <div class="text-[11px] text-amber-700 font-medium">نرخ فروش</div>
+              <div class="font-extrabold text-amber-950 text-sm mt-0.5">${escapeHtml(item.sell)}</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // کپی کل تابلوی نرخ ارزها برای اشتراک‌گذاری در تلگرام یا واتساپ
+    function copyRatesBoard() {
+      if (!rates || rates.length === 0) {
+        showToast('نرخی برای کپی کردن وجود ندارد');
+        return;
+      }
+
+      let lines = [
+        `📊 *تابلوی نرخ لحظه‌ای ${settings.sarafiName}*`,
+        `🕒 بروزرسانی: ${settings.ratesUpdatedAt || 'هم‌اکنون'}`,
+        `-------------------------`
+      ];
+
+      rates.forEach(r => {
+        lines.push(`${r.icon || '🔸'} *${r.name}*`);
+        lines.push(`   🟢 خرید: ${r.buy}  |  🔴 فروش: ${r.sell}`);
+      });
+
+      if (settings.promoEnabled && settings.promoText) {
+        lines.push(`-------------------------`);
+        lines.push(`📢 ${settings.promoText}`);
+      }
+
+      const fullText = lines.join('\n');
+      const tempInput = document.createElement('textarea');
+      tempInput.value = fullText;
+      tempInput.style.position = 'fixed';
+      tempInput.style.opacity = '0';
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand('copy');
+        showToast('تابلوی نرخ ارزها کپی شد! آماده ارسال در تلگرام یا واتساپ');
+      } catch (e) {
+        showToast('خطا در کپی کردن تابلو');
+      }
+      document.body.removeChild(tempInput);
+    }
+
+    // رندر لیست بانک‌ها در صفحه مشتری
+    function renderCustomerBanksGrid() {
+      const grid = document.getElementById('banksGrid');
+      const noBanksMsg = document.getElementById('noBanksMessage');
+      const activeCountBadge = document.getElementById('activeBanksCountBadge');
+
+      const activeBanks = banks.filter(b => b.active !== false);
+      activeCountBadge.textContent = `${activeBanks.length} بانک`;
+
+      if (activeBanks.length === 0) {
+        grid.innerHTML = '';
+        noBanksMsg.classList.remove('hidden');
+        return;
+      }
+
+      noBanksMsg.classList.add('hidden');
+      grid.innerHTML = activeBanks.map(bank => {
+        const style = COLOR_STYLES[bank.color] || COLOR_STYLES.emerald;
+        const isSelected = selectedBankId === bank.id;
+        const firstLetter = bank.name.trim().charAt(0);
+
+        return `
+          <button
+            onclick="selectBank('${bank.id}')"
+            class="group relative p-4 rounded-2xl border-2 transition-all duration-200 text-right flex flex-col items-center justify-center gap-2.5 ${
+              isSelected
+                ? 'border-emerald-600 bg-emerald-50/80 shadow-md ring-2 ring-emerald-500/20 scale-[1.02]'
+                : 'border-slate-200/90 bg-slate-50/60 hover:bg-white hover:border-emerald-400 hover:shadow-md'
+            }"
+          >
+            ${isSelected ? `
+              <span class="absolute top-2.5 left-2.5 w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </span>
+            ` : ''}
+
+            <div class="w-12 h-12 rounded-2xl ${style.bg} text-white font-extrabold text-xl flex items-center justify-center shadow-sm group-hover:scale-105 transition">
+              ${firstLetter}
+            </div>
+            <div class="text-center">
+              <div class="font-extrabold text-slate-800 text-sm sm:text-base">بانک ${escapeHtml(bank.name)}</div>
+              <div class="text-[11px] text-slate-500 mt-0.5 truncate max-w-[130px]">${escapeHtml(bank.holder)}</div>
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    // انتخاب بانک توسط مشتری (مرحله ۱)
+    function selectBank(bankId) {
+      selectedBankId = bankId;
+      selectedDetailType = null; // ریست گزینه قبلی تا کاربر کارت، شبا یا حساب را انتخاب کند
+
+      const bank = banks.find(b => b.id === bankId);
+      if (!bank) return;
+
+      renderCustomerBanksGrid();
+
+      const style = COLOR_STYLES[bank.color] || COLOR_STYLES.emerald;
+      const avatar = document.getElementById('selectedBankAvatar');
+      avatar.className = `w-11 h-11 rounded-2xl ${style.bg} flex items-center justify-center font-extrabold text-lg text-white shadow`;
+      avatar.textContent = bank.name.trim().charAt(0);
+
+      document.getElementById('selectedBankName').textContent = `بانک ${bank.name}`;
+      document.getElementById('selectedAccountHolder').textContent = bank.holder;
+
+      // ریست استایل دکمه‌های سه‌گانه
+      document.querySelectorAll('.detail-type-btn').forEach(btn => {
+        btn.classList.remove('border-emerald-600', 'bg-emerald-50', 'ring-2', 'ring-emerald-500/20');
+        btn.classList.add('border-slate-200', 'bg-slate-50/70');
+      });
+
+      // مخفی کردن باکس نهایی تا انتخاب یکی از سه گزینه
+      document.getElementById('finalNumberRevealBox').classList.add('hidden');
+
+      const detailsCard = document.getElementById('paymentDetailsCard');
+      detailsCard.classList.remove('hidden');
+      detailsCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // انتخاب گزینه کارت، شبا یا شماره حساب (مرحله ۲ و ۳)
+    function selectDetailType(type) {
+      if (!selectedBankId) return;
+      const bank = banks.find(b => b.id === selectedBankId);
+      if (!bank) return;
+
+      selectedDetailType = type;
+
+      // بروزرسانی ظاهر دکمه انتخاب‌شده
+      document.querySelectorAll('.detail-type-btn').forEach(btn => {
+        btn.classList.remove('border-emerald-600', 'bg-emerald-50', 'ring-2', 'ring-emerald-500/20');
+        btn.classList.add('border-slate-200', 'bg-slate-50/70');
+      });
+      const activeBtn = document.getElementById(`optBtn-${type}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-slate-200', 'bg-slate-50/70');
+        activeBtn.classList.add('border-emerald-600', 'bg-emerald-50', 'ring-2', 'ring-emerald-500/20');
+      }
+
+      // تعیین عنوان و مقدار نمایشی
+      let label = '';
+      let formattedValue = '';
+
+      if (type === 'card') {
+        label = 'شماره کارت';
+        formattedValue = formatCardDisplay(bank.card);
+      } else if (type === 'sheba') {
+        label = 'شماره شبا';
+        formattedValue = formatShebaDisplay(bank.sheba);
+      } else if (type === 'account') {
+        label = 'شماره حساب';
+        formattedValue = normalizeDigits(bank.account);
+      }
+
+      document.getElementById('revealedLabelBadge').textContent = label;
+      document.getElementById('revealedBankSubLabel').textContent = `بانک ${bank.name}`;
+      document.getElementById('revealedHolderName').textContent = bank.holder;
+      document.getElementById('revealedNumberText').textContent = formattedValue || 'ثبت نشده';
+
+      // بازگرداندن دکمه کپی به حالت اولیه
+      resetCopyButtonState();
+
+      const revealBox = document.getElementById('finalNumberRevealBox');
+      revealBox.classList.remove('hidden');
+      revealBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // کپی کردن شماره انتخاب‌شده در کلیپ‌بورد
+    function copySelectedNumber() {
+      if (!selectedBankId || !selectedDetailType) return;
+      const bank = banks.find(b => b.id === selectedBankId);
+      if (!bank) return;
+
+      let rawToCopy = '';
+      let label = '';
+
+      if (selectedDetailType === 'card') {
+        rawToCopy = normalizeDigits(bank.card);
+        label = 'شماره کارت';
+      } else if (selectedDetailType === 'sheba') {
+        let s = normalizeDigits(bank.sheba);
+        rawToCopy = s.startsWith('IR') ? s : 'IR' + s;
+        label = 'شماره شبا';
+      } else if (selectedDetailType === 'account') {
+        rawToCopy = normalizeDigits(bank.account);
+        label = 'شماره حساب';
+      }
+
+      // استفاده از روش مطمئن کپی در کلیپ‌بورد
+      const tempInput = document.createElement('textarea');
+      tempInput.value = rawToCopy;
+      tempInput.style.position = 'fixed';
+      tempInput.style.opacity = '0';
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      tempInput.setSelectionRange(0, 99999);
+
+      try {
+        document.execCommand('copy');
+        showCopySuccessState(label, bank.name);
+      } catch (err) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(rawToCopy).then(() => {
+            showCopySuccessState(label, bank.name);
+          });
+        }
+      }
+      document.body.removeChild(tempInput);
+    }
+
+    function showCopySuccessState(label, bankName) {
+      const btn = document.getElementById('copyActionBtn');
+      const iconDef = document.getElementById('copyIconDefault');
+      const iconSuc = document.getElementById('copyIconSuccess');
+      const btnLabel = document.getElementById('copyBtnLabel');
+
+      btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
+      btn.classList.add('bg-slate-900');
+      iconDef.classList.add('hidden');
+      iconSuc.classList.remove('hidden');
+      btnLabel.textContent = 'کپی شد!';
+
+      showToast(`${label} بانک ${bankName} کپی شد`);
+
+      setTimeout(() => {
+        resetCopyButtonState();
+      }, 2500);
+    }
+
+    function resetCopyButtonState() {
+      const btn = document.getElementById('copyActionBtn');
+      const iconDef = document.getElementById('copyIconDefault');
+      const iconSuc = document.getElementById('copyIconSuccess');
+      const btnLabel = document.getElementById('copyBtnLabel');
+
+      btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
+      btn.classList.remove('bg-slate-900');
+      iconDef.classList.remove('hidden');
+      iconSuc.classList.add('hidden');
+      btnLabel.textContent = 'کپی کردن شماره';
+    }
+
+    function resetSelection() {
+      selectedBankId = null;
+      selectedDetailType = null;
+      document.getElementById('paymentDetailsCard').classList.add('hidden');
+      renderCustomerBanksGrid();
+    }
+
+    // ==================== مدیریت پنل ادمین ====================
+
+    function openAdminAccess() {
+      if (isAdminAuthenticated) {
+        showAdminView();
+      } else {
+        document.getElementById('pinInputField').value = '';
+        document.getElementById('pinErrorMsg').classList.add('hidden');
+        document.getElementById('adminPinModal').classList.remove('hidden');
+        setTimeout(() => document.getElementById('pinInputField').focus(), 100);
+      }
+    }
+
+    function closePinModal() {
+      document.getElementById('adminPinModal').classList.add('hidden');
+    }
+
+    function verifyAdminPin(e) {
+      e.preventDefault();
+      const entered = document.getElementById('pinInputField').value.trim();
+      if (entered === settings.adminPin) {
+        isAdminAuthenticated = true;
+        closePinModal();
+        showAdminView();
+        showToast('خوش آمدید! وارد پنل مدیریت شدید');
+      } else {
+        document.getElementById('pinErrorMsg').classList.remove('hidden');
+      }
+    }
+
+    function showAdminView() {
+      document.getElementById('customerSection').classList.add('hidden');
+      document.getElementById('adminSection').classList.remove('hidden');
+      document.getElementById('btnAdminPanel').classList.add('hidden');
+      document.getElementById('btnCustomerView').classList.remove('hidden');
+      renderAdminRatesList();
+      renderAdminBanksList();
+    }
+
+    // جابجایی بین تب‌های پنل مدیریت
+    function switchAdminTab(tabName) {
+      document.querySelectorAll('.admin-tab-panel').forEach(panel => {
+        panel.classList.add('hidden');
+      });
+      document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+        btn.classList.remove('bg-emerald-600', 'text-white', 'shadow-sm');
+        btn.classList.add('text-slate-600', 'hover:bg-slate-100');
+      });
+
+      const activePanel = document.getElementById(`adminTabContent-${tabName}`);
+      const activeBtn = document.getElementById(`adminTabBtn-${tabName}`);
+      if (activePanel) activePanel.classList.remove('hidden');
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+        activeBtn.classList.add('bg-emerald-600', 'text-white', 'shadow-sm');
+      }
+    }
+
+    function switchToCustomerView() {
+      document.getElementById('adminSection').classList.add('hidden');
+      document.getElementById('customerSection').classList.remove('hidden');
+      document.getElementById('btnCustomerView').classList.add('hidden');
+      document.getElementById('btnAdminPanel').classList.remove('hidden');
+      applyWelcomeText();
+      renderCustomerRates();
+      renderCustomerBanksGrid();
+      if (selectedBankId) {
+        const stillExists = banks.find(b => b.id === selectedBankId && b.active !== false);
+        if (!stillExists) {
+          resetSelection();
+        } else if (selectedDetailType) {
+          selectDetailType(selectedDetailType);
+        }
+      }
+    }
+
+    function logoutAdmin() {
+      isAdminAuthenticated = false;
+      switchToCustomerView();
+      showToast('پنل مدیریت قفل شد');
+    }
+
+    // افزودن یا ویرایش بانک
+    function handleSaveBank(e) {
+      e.preventDefault();
+      const editId = document.getElementById('editBankId').value;
+      const name = document.getElementById('inputBankName').value.trim();
+      const holder = document.getElementById('inputHolderName').value.trim();
+      const color = document.getElementById('inputBankColor').value;
+      const card = normalizeDigits(document.getElementById('inputCardNumber').value);
+      let sheba = normalizeDigits(document.getElementById('inputShebaNumber').value);
+      if (sheba && !sheba.startsWith('IR')) {
+        sheba = 'IR' + sheba;
+      }
+      const account = normalizeDigits(document.getElementById('inputAccountNumber').value);
+
+      if (!name || !holder || !card || !sheba || !account) {
+        showToast('لطفاً تمام فیلدها را تکمیل کنید');
+        return;
+      }
+
+      if (editId) {
+        const idx = banks.findIndex(b => b.id === editId);
+        if (idx !== -1) {
+          banks[idx] = {
+            ...banks[idx],
+            name,
+            holder,
+            color,
+            card,
+            sheba,
+            account
+          };
+          showToast(`اطلاعات بانک ${name} بروزرسانی شد`);
+        }
+      } else {
+        const newBank = {
+          id: 'bank-' + Date.now(),
+          name,
+          holder,
+          color,
+          card,
+          sheba,
+          account,
+          active: true
+        };
+        banks.push(newBank);
+        showToast(`بانک ${name} با موفقیت اضافه شد`);
+      }
+
+      saveBanksToStorage();
+      cancelEditBank();
+      renderAdminBanksList();
+      renderCustomerBanksGrid();
+    }
+
+    function startEditBank(bankId) {
+      const bank = banks.find(b => b.id === bankId);
+      if (!bank) return;
+
+      document.getElementById('editBankId').value = bank.id;
+      document.getElementById('inputBankName').value = bank.name;
+      document.getElementById('inputHolderName').value = bank.holder;
+      document.getElementById('inputBankColor').value = bank.color || 'emerald';
+      document.getElementById('inputCardNumber').value = formatCardDisplay(bank.card);
+      document.getElementById('inputShebaNumber').value = formatShebaDisplay(bank.sheba);
+      document.getElementById('inputAccountNumber').value = bank.account;
+
+      document.getElementById('formTitle').innerHTML = `
+        <span class="w-2.5 h-6 rounded-full bg-amber-500 inline-block"></span>
+        ویرایش اطلاعات بانک ${escapeHtml(bank.name)}
+      `;
+      document.getElementById('saveBankSubmitBtn').innerHTML = `<span>ذخیره تغییرات بانک</span>`;
+      document.getElementById('cancelEditBtn').classList.remove('hidden');
+
+      document.getElementById('bankForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function cancelEditBank() {
+      document.getElementById('editBankId').value = '';
+      document.getElementById('bankForm').reset();
+      document.getElementById('formTitle').innerHTML = `
+        <span class="w-2.5 h-6 rounded-full bg-emerald-600 inline-block"></span>
+        افزودن بانک جدید به لیست صرافی
+      `;
+      document.getElementById('saveBankSubmitBtn').innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        <span>ذخیره و افزودن بانک</span>
+      `;
+      document.getElementById('cancelEditBtn').classList.add('hidden');
+    }
+
+    function toggleBankActive(bankId) {
+      const bank = banks.find(b => b.id === bankId);
+      if (!bank) return;
+      bank.active = bank.active === false ? true : false;
+      saveBanksToStorage();
+      renderAdminBanksList();
+      renderCustomerBanksGrid();
+      showToast(bank.active ? `بانک ${bank.name} فعال شد` : `بانک ${bank.name} مخفی شد`);
+    }
+
+    function deleteBank(bankId) {
+      const bank = banks.find(b => b.id === bankId);
+      if (!bank) return;
+      banks = banks.filter(b => b.id !== bankId);
+      saveBanksToStorage();
+      renderAdminBanksList();
+      renderCustomerBanksGrid();
+      showToast(`بانک ${bank.name} حذف شد`);
+    }
+
+    function renderAdminBanksList() {
+      const container = document.getElementById('adminBanksList');
+      document.getElementById('adminBankCount').textContent = banks.length;
+
+      if (banks.length === 0) {
+        container.innerHTML = `<p class="text-sm text-slate-500 text-center py-6">هیچ بانکی در لیست وجود ندارد. از فرم بالا بانک اضافه کنید.</p>`;
+        return;
+      }
+
+      container.innerHTML = banks.map(bank => {
+        const style = COLOR_STYLES[bank.color] || COLOR_STYLES.emerald;
+        const isActive = bank.active !== false;
+
+        return `
+          <div class="p-4 rounded-2xl border ${isActive ? 'border-slate-200 bg-slate-50/60' : 'border-slate-200 bg-slate-100 opacity-65'} flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div class="flex items-start sm:items-center gap-3">
+              <div class="w-11 h-11 rounded-2xl ${style.bg} text-white font-extrabold text-lg flex items-center justify-center shrink-0">
+                ${bank.name.trim().charAt(0)}
+              </div>
+              <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-extrabold text-slate-800 text-base">بانک ${escapeHtml(bank.name)}</span>
+                  <span class="text-xs px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-600">صاحب حساب: ${escapeHtml(bank.holder)}</span>
+                  ${!isActive ? '<span class="text-[11px] px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 font-bold">غیرفعال</span>' : ''}
+                </div>
+                <div class="flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-600">
+                  <span>کارت: <strong dir="ltr" class="font-mono text-slate-800">${formatCardDisplay(bank.card)}</strong></span>
+                  <span>شبا: <strong dir="ltr" class="font-mono text-slate-800">${formatShebaDisplay(bank.sheba)}</strong></span>
+                  <span>حساب: <strong dir="ltr" class="font-mono text-slate-800">${escapeHtml(bank.account)}</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 self-end lg:self-center shrink-0">
+              <button onclick="toggleBankActive('${bank.id}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold border transition ${isActive ? 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100' : 'bg-emerald-600 border-emerald-600 text-white'}">
+                ${isActive ? 'مخفی کردن' : 'فعال کردن'}
+              </button>
+              <button onclick="startEditBank('${bank.id}')" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-semibold transition">
+                ویرایش
+              </button>
+              <button onclick="deleteBank('${bank.id}')" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-semibold transition">
+                حذف
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ==================== مدیریت نرخ ارزها در پنل مدیریت ====================
+
+    function getFormattedNowTime() {
+      try {
+        return new Date().toLocaleString('fa-IR', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      } catch (e) {
+        return 'بروزرسانی شده';
+      }
+    }
+
+    function handleSaveRate(e) {
+      e.preventDefault();
+      const editId = document.getElementById('editRateId').value;
+      const name = document.getElementById('inputRateName').value.trim();
+      const buy = document.getElementById('inputRateBuy').value.trim();
+      const sell = document.getElementById('inputRateSell').value.trim();
+      const icon = document.getElementById('inputRateIcon').value.trim() || '💱';
+
+      if (!name || !buy || !sell) {
+        showToast('لطفاً نام ارز و نرخ خرید و فروش را وارد کنید');
+        return;
+      }
+
+      if (editId) {
+        const idx = rates.findIndex(r => r.id === editId);
+        if (idx !== -1) {
+          rates[idx] = { ...rates[idx], name, buy, sell, icon };
+          showToast(`نرخ ${name} بروزرسانی شد`);
+        }
+      } else {
+        rates.push({
+          id: 'rate-' + Date.now(),
+          name,
+          buy,
+          sell,
+          icon
+        });
+        showToast(`نرخ ${name} به تابلو اضافه شد`);
+      }
+
+      settings.ratesUpdatedAt = getFormattedNowTime();
+      saveRatesToStorage();
+      saveSettingsToStorage();
+      cancelEditRate();
+      renderAdminRatesList();
+      renderCustomerRates();
+      applyWelcomeText();
+    }
+
+    function startEditRate(rateId) {
+      const rate = rates.find(r => r.id === rateId);
+      if (!rate) return;
+
+      document.getElementById('editRateId').value = rate.id;
+      document.getElementById('inputRateName').value = rate.name;
+      document.getElementById('inputRateBuy').value = rate.buy;
+      document.getElementById('inputRateSell').value = rate.sell;
+      document.getElementById('inputRateIcon').value = rate.icon || '';
+
+      document.getElementById('rateFormTitle').innerHTML = `
+        <span class="w-2.5 h-6 rounded-full bg-emerald-600 inline-block"></span>
+        ویرایش نرخ: ${escapeHtml(rate.name)}
+      `;
+      document.getElementById('saveRateSubmitBtn').textContent = 'ذخیره تغییرات نرخ';
+      document.getElementById('cancelRateEditBtn').classList.remove('hidden');
+      document.getElementById('rateForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function cancelEditRate() {
+      document.getElementById('editRateId').value = '';
+      document.getElementById('rateForm').reset();
+      document.getElementById('rateFormTitle').innerHTML = `
+        <span class="w-2.5 h-6 rounded-full bg-amber-500 inline-block"></span>
+        افزودن یا ویرایش نرخ ارز
+      `;
+      document.getElementById('saveRateSubmitBtn').textContent = 'ثبت نرخ در تابلو';
+      document.getElementById('cancelRateEditBtn').classList.add('hidden');
+    }
+
+    function moveRateItem(index, direction) {
+      const newIndex = index + direction;
+      if (newIndex < 0 || newIndex >= rates.length) return;
+      const temp = rates[index];
+      rates[index] = rates[newIndex];
+      rates[newIndex] = temp;
+      saveRatesToStorage();
+      renderAdminRatesList();
+      renderCustomerRates();
+    }
+
+    function deleteRateItem(rateId) {
+      rates = rates.filter(r => r.id !== rateId);
+      settings.ratesUpdatedAt = getFormattedNowTime();
+      saveRatesToStorage();
+      saveSettingsToStorage();
+      renderAdminRatesList();
+      renderCustomerRates();
+      applyWelcomeText();
+      showToast('ارز از تابلو حذف شد');
+    }
+
+    function resetToDefaultRates() {
+      rates = JSON.parse(JSON.stringify(DEFAULT_RATES));
+      settings.ratesUpdatedAt = getFormattedNowTime();
+      saveRatesToStorage();
+      saveSettingsToStorage();
+      renderAdminRatesList();
+      renderCustomerRates();
+      applyWelcomeText();
+      showToast('تابلوی ارزها به حالت پیش‌فرض بازگشت');
+    }
+
+    function renderAdminRatesList() {
+      const container = document.getElementById('adminRatesList');
+      document.getElementById('adminRatesCount').textContent = rates.length;
+
+      if (rates.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">هیچ ارزی ثبت نشده است. از فرم بالا ارز اضافه کنید.</p>`;
+        return;
+      }
+
+      container.innerHTML = rates.map((rate, idx) => `
+        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">${escapeHtml(rate.icon || '💱')}</span>
+            <div>
+              <div class="font-extrabold text-slate-800 text-sm sm:text-base">${escapeHtml(rate.name)}</div>
+              <div class="flex flex-wrap gap-3 text-xs mt-1">
+                <span class="text-emerald-700 font-bold">خرید: ${escapeHtml(rate.buy)}</span>
+                <span class="text-amber-700 font-bold">فروش: ${escapeHtml(rate.sell)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1.5 self-end sm:self-center">
+            <button onclick="moveRateItem(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} title="بالا" class="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 disabled:opacity-30 hover:bg-slate-100">▲</button>
+            <button onclick="moveRateItem(${idx}, 1)" ${idx === rates.length - 1 ? 'disabled' : ''} title="پایین" class="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 disabled:opacity-30 hover:bg-slate-100">▼</button>
+            <button onclick="startEditRate('${rate.id}')" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-xs font-bold">ویرایش</button>
+            <button onclick="deleteRateItem('${rate.id}')" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold">حذف</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function saveAllTextSettings() {
+      const sarafiName = document.getElementById('settingSarafiName').value.trim();
+      const sarafiTagline = document.getElementById('settingSarafiTagline').value.trim();
+      const promoEnabled = document.getElementById('settingPromoEnabled').checked;
+      const promoText = document.getElementById('settingPromoText').value.trim();
+      const title = document.getElementById('settingWelcomeTitle').value.trim();
+      const subtitle = document.getElementById('settingWelcomeSubtitle').value.trim();
+
+      if (sarafiName) settings.sarafiName = sarafiName;
+      settings.sarafiTagline = sarafiTagline;
+      settings.promoEnabled = promoEnabled;
+      settings.promoText = promoText;
+      if (title) settings.welcomeTitle = title;
+      if (subtitle) settings.welcomeSubtitle = subtitle;
+
+      saveSettingsToStorage();
+      applyWelcomeText();
+      showToast('نام صرافی، تبلیغات و متن خوش‌آمدگویی ذخیره شد');
+    }
+
+    function saveAdminPin() {
+      const newPin = document.getElementById('settingAdminPin').value.trim();
+      if (newPin.length < 3) {
+        showToast('رمز عبور باید حداقل ۳ کاراکتر باشد');
+        return;
+      }
+      settings.adminPin = newPin;
+      saveSettingsToStorage();
+      showToast('رمز ورود به پنل مدیریت تغییر کرد');
+    }
+
+    function resetToDefaultBanks() {
+      banks = JSON.parse(JSON.stringify(DEFAULT_BANKS));
+      saveBanksToStorage();
+      renderAdminBanksList();
+      renderCustomerBanksGrid();
+      showToast('لیست بانک‌ها به حالت اولیه بازگردانده شد');
+    }
+
+    // پشتیبان‌گیری JSON
+    function exportBackupJSON() {
+      const dataStr = JSON.stringify({ banks, rates, settings }, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `sarafi-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('فایل پشتیبان دانلود شد');
+    }
+
+    function importBackupJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (Array.isArray(parsed.banks)) {
+            banks = parsed.banks;
+            saveBanksToStorage();
+          }
+          if (Array.isArray(parsed.rates)) {
+            rates = parsed.rates;
+            saveRatesToStorage();
+          }
+          if (parsed.settings) {
+            settings = { ...DEFAULT_SETTINGS, ...parsed.settings };
+            saveSettingsToStorage();
+            applyWelcomeText();
+          }
+          renderAdminRatesList();
+          renderCustomerRates();
+          renderAdminBanksList();
+          renderCustomerBanksGrid();
+          showToast('اطلاعات پشتیبان با موفقیت بازیابی شد');
+        } catch (err) {
+          showToast('فایل انتخاب‌شده معتبر نیست');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    // نمایش اعلان Toast
+    let toastTimer = null;
+    function showToast(message) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastText').textContent = message;
+
+      toast.classList.remove('opacity-0', 'translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-4');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2800);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    window.onload = function() {
+      initApp();
+    };
+  </script>
+</body>
+</html>
